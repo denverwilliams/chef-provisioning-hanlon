@@ -13,7 +13,10 @@ class Chef::Resource::HanlonTag < Chef::Resource::LWRPBase
 
   attribute :driver
   attribute :name, kind_of: String, name_attribute: true, required: true
-  attribute :tag, required: true
+  # tag matchers (proper tags) will require more work
+  # for now just supporting field matchers
+  # attribute :tag
+  attribute :field, required: true
   # attribute :match, required: true, kind_of: Array
   # matches should have some validation, but this is just to get to an mvp
   def after(&block)

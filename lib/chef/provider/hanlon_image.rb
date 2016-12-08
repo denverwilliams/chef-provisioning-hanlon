@@ -9,7 +9,7 @@ class Chef::Provider::HanlonImage < Chef::Provider::LWRPBase
   #  super
   #end
 
-  
+  provides :hanlon_image
   def whyrun_supported?
     # I think we need a working @current_resource
     false #true

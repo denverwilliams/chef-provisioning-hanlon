@@ -9,7 +9,7 @@ class Chef::Provider::HanlonPolicy < Chef::Provider::LWRPBase
   #  super
   #end
 
-  
+  provides :hanlon_policy 
   def whyrun_supported?
     # I think we need a working @current_resource
     false #true
@@ -69,9 +69,13 @@ class Chef::Provider::HanlonPolicy < Chef::Provider::LWRPBase
   action :delete do
     config_hanlon_api
     matching_models=Hanlon::Api::Model.filter('label',nr.label)
+    #fix me
+    binding.pry
     return if matching_models.empty?
     our_model = matching_models.first
     Hanlon::Api::Model.destroy(our_model.uuid)
+    #can be a    Faraday::Response
+    # which means it's likely on error
     new_resource.updated_by_last_action(true)
   end
   

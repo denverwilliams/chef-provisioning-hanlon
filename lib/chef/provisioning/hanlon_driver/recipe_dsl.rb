@@ -5,6 +5,10 @@ require 'chef/resource/hanlon_model'
 require 'chef/provider/hanlon_model'
 require 'chef/resource/hanlon_policy'
 require 'chef/provider/hanlon_policy'
+require 'chef/resource/hanlon_tag'
+require 'chef/provider/hanlon_tag'
+require 'chef/resource/hanlon_ipmi'
+require 'chef/provider/hanlon_ipmi'
 
 
 class Chef

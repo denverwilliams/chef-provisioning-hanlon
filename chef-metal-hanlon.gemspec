@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.homepage = 'https://github.com/opscode/chef-provisioning-hanlon'
 
   s.add_dependency 'chef'
-  s.add_dependency 'chef-provisioning', '~> 0.9'
+  s.add_dependency 'chef-provisioning', '~> 2.0'
   s.add_dependency 'hanlon-api', '~> 0.0'
 
   s.add_development_dependency 'rspec'

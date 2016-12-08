@@ -1,6 +1,6 @@
 require 'chef/provider/lwrp_base'
 require 'chef/provisioning/hanlon_driver/hanlon_driver'
-require 'pry'
+require 'pry-byebug'
 
 class Chef::Provider::HanlonModel < Chef::Provider::LWRPBase
   use_inline_resources
@@ -9,7 +9,7 @@ class Chef::Provider::HanlonModel < Chef::Provider::LWRPBase
   #  super
   #end
 
-  
+  provides :hanlon_model
   def whyrun_supported?
     # I think we need a working @current_resource
     false #true
@@ -28,7 +28,7 @@ class Chef::Provider::HanlonModel < Chef::Provider::LWRPBase
   action :create do
     config_hanlon_api
     matching_models=Hanlon::Api::Model.filter('label',nr.label)
-    
+
     if not matching_models.empty?
       our_model = matching_models.first
       new_resource.updated_by_last_action(false)
@@ -41,7 +41,7 @@ class Chef::Provider::HanlonModel < Chef::Provider::LWRPBase
       
       matching_images = Hanlon::Api::Image.filter('filename', nr.image)
       our_image = matching_images.first
-      
+      raise "No image '#{nr.image}'found" if not our_image
       model_options = {
         label: nr.label,
         template: nr.template,
