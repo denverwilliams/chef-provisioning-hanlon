@@ -1,6 +1,6 @@
 require 'chef/provider/lwrp_base'
 require 'chef/provisioning/hanlon_driver/hanlon_driver'
-require 'pry'
+require 'pry-byebug'
 
 class Chef::Provider::HanlonTag < Chef::Provider::LWRPBase
   use_inline_resources
@@ -19,27 +19,37 @@ class Chef::Provider::HanlonTag < Chef::Provider::LWRPBase
     end
   end
 
+  provides :hanlon_tag
+
   # TODO keying off something other than the iso filename
   action :create do
     config_hanlon_api
-    if Hanlon::Api::Image.filter('filename', nr.path) == []
-      image=Hanlon::Api::Image.create({type: nr.type,
-                                       path: nr.path,
-                                       description: nr.description,
-                                       name: nr.name,
-                                       version: nr.version})
+    #binding.pry
+    list=Hanlon::Api::Tag.filter('field', nr.field)
+    if list.class == Array and list.empty?
+      tag=Hanlon::Api::Tag.create({name: nr.field,
+                                   field: nr.field})
       new_resource.updated_by_last_action(true)
+    else
+      #list.empty? || list.status == 404
+      # needs works FIXME
     end
   end
-  
+
   action :delete do
     config_hanlon_api
-    list = Hanlon::Api::Image.filter('filename', nr.path)
-    if list
+    list = Hanlon::Api::Tag.filter('field', nr.field)
+    if list.class == Array
       match = list.first
-      Hanlon::Api::Image.destroy(match.uuid)
+      if match
+        Hanlon::Api::Tag.destroy(match.uuid)
+        new_resource.updated_by_last_action(true)
+      end
+    else
+      next
+      # not an array, could check further
+      #if list.status == 404
     end
-    new_resource.updated_by_last_action(true)
   end
 
   def hanlon_url
